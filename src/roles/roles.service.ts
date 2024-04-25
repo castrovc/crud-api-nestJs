@@ -1,127 +1,102 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Rol } from './entities/rol.entity';
+import { Role } from './entities/role.entity';
 import { Repository } from 'typeorm';
-import { CreateRolDto } from './dto/create-rol.dto';
-import { UpdateRolDto } from './dto/update-rol.dto';
+import { CreateRoleDto } from './dto/create-role.dto';
+import { UpdateRoleDto } from './dto/update-role.dto';
 
 @Injectable()
 export class RolesService {
   constructor(
-    @InjectRepository(Rol)
-    private readonly rolRepository: Repository<Rol>,
+    @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
   ) {}
 
-  async create(createRolDto: CreateRolDto) {
+  async create(createRoleDto: CreateRoleDto) {
     try {
-      const rol = this.rolRepository.create(createRolDto);
-      await this.rolRepository.save(rol);
+      const role = this.roleRepository.create(createRoleDto);
+      await this.roleRepository.save(role);
+
       return {
         ok: true,
         message: 'Rol creado correctamente',
-        status: HttpStatus.CREATED,
+        status: 201,
       };
     } catch (error) {
       return {
         ok: false,
-        message: 'Error al crear el rol',
-        status: HttpStatus.BAD_REQUEST,
+        message: 'Ocurrio un error al guardar el rol',
+        status: 500,
       };
     }
   }
 
   async findAll() {
     try {
-      const roles = await this.rolRepository.find({
+      const roles = await this.roleRepository.find({
         where: { isActive: true },
       });
 
       if (roles.length > 0) {
-        return {
-          ok: true,
-          roles,
-          status: HttpStatus.OK,
-        };
+        return { ok: true, roles, status: 200 };
       }
 
-      return {
-        ok: false,
-        message: 'No se encontraron roles',
-        status: HttpStatus.NOT_FOUND,
-      };
+      return { ok: false, message: 'No se encontraron roles', status: 404 };
     } catch (error) {
       return {
         ok: false,
-        message: 'No se encontraron roles',
-        status: HttpStatus.NOT_FOUND,
+        message: 'Ocurrio un error al obtener los roles',
+        status: 500,
       };
     }
   }
 
   async findOne(id: number) {
     try {
-      const rol = await this.rolRepository.findOne({ where: { id } });
-
+      const rol = await this.roleRepository.findOne({ where: { id } });
       if (!rol) {
-        return {
-          ok: false,
-          message: 'Rol no encontrado',
-          status: HttpStatus.NOT_FOUND,
-        };
+        return { ok: false, message: 'Rol no encontrado', status: 404 };
       }
 
-      return {
-        ok: true,
-        rol,
-        status: HttpStatus.OK,
-      };
+      return { ok: true, rol, status: 200 };
     } catch (error) {
-      return {
-        ok: false,
-        message: 'Error al obtener el rol',
-        status: HttpStatus.NOT_FOUND,
-      };
+      return { ok: false, message: 'Ocurrio un error', status: 500 };
     }
   }
 
-  async update(id: number, updateRolDto: UpdateRolDto) {
+  async update(id: number, updateRoleDto: UpdateRoleDto) {
     try {
-      const rol = await this.rolRepository.findOne({ where: { id } });
+      const rol = await this.roleRepository.findOne({ where: { id } });
 
-      rol.name = updateRolDto.name;
-      await this.rolRepository.save(rol);
+      rol.name = updateRoleDto.name;
+      await this.roleRepository.save(rol);
 
       return {
         ok: true,
         message: 'Rol actualizado correctamente',
-        status: HttpStatus.OK,
+        status: 200,
       };
     } catch (error) {
-      return {
-        ok: false,
-        message: 'Error al actualizar el rol',
-        status: HttpStatus.BAD_REQUEST,
-      };
+      return { ok: false, message: 'Ocurrio un error', status: 500 };
     }
   }
 
   async remove(id: number) {
     try {
-      const rol = await this.rolRepository.findOne({ where: { id } });
+      const rol = await this.roleRepository.findOne({ where: { id } });
 
       rol.isActive = false;
 
-      await this.rolRepository.save(rol);
+      await this.roleRepository.save(rol);
       return {
         ok: true,
-        message: 'Rol eliminado',
-        status: HttpStatus.OK,
+        message: 'Rol eliminado correctamente',
+        status: 200,
       };
     } catch (error) {
       return {
         ok: false,
         message: 'Ocurrio un error al eliminar el rol',
-        status: HttpStatus.BAD_REQUEST,
+        status: 500,
       };
     }
   }

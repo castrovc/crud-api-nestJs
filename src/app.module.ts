@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesService } from './roles/roles.service';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -20,8 +21,9 @@ import { RolesService } from './roles/roles.service';
       autoLoadEntities: true,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
+    RolesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, RolesService],
+  providers: [AppService],
 })
 export class AppModule {}
