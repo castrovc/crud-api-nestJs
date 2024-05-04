@@ -7,6 +7,7 @@ import { RolesService } from './roles/roles.service';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
 import { CommonsModule } from './commons/commons.module';
+import { GraphicsModule } from './graphics/graphics.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CommonsModule } from './commons/commons.module';
     RolesModule,
     UsersModule,
     CommonsModule,
+    GraphicsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
