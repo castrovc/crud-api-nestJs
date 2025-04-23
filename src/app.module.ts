@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesService } from './roles/roles.service';
 import { RolesModule } from './roles/roles.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { RolesModule } from './roles/roles.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
     RolesModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
